@@ -1,0 +1,9 @@
+{
+  "name": "Xbox S Series Android Simulator",
+  "short_name": "Xbox S Simulator",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#07131c",
+  "theme_color": "#07131c",
+  "description": "Online-ready Xbox-style Android simulator dashboard prototype"
+}

@@ -1,0 +1,14 @@
+services:
+  android-runtime:
+    image: redroid/redroid:12.0.0_64only-latest
+    privileged: true
+    restart: unless-stopped
+    ports:
+      - "5555:5555"
+    volumes:
+      - ./android-data:/data
+    command:
+      - androidboot.redroid_width=1280
+      - androidboot.redroid_height=720
+      - androidboot.redroid_fps=60
+      - androidboot.redroid_dpi=320
