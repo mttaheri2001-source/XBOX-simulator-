@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xbox S Series Android Simulator</title>
+<link rel="stylesheet" href="styles.css"><link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+<div id="app">
+  <div class="ambient"></div>
+
+  <header class="topbar">
+    <div class="profile">
+      <div class="avatar">X</div>
+      <div>
+        <div class="gamertag" id="gamertag">Tahir • ULTIMATE</div>
+        <div class="points">● <span id="points">21,337</span></div>
+      </div>
+    </div>
+    <nav class="quick">
+      <button data-section="home" class="quick-btn active">⌂</button>
+      <button data-section="apps" class="quick-btn">▦</button>
+      <button data-section="downloads" class="quick-btn">⇩</button>
+      <button data-section="search" class="quick-btn">⌕</button>
+      <button data-section="settings" class="quick-btn">⚙</button>
+    </nav>
+    <div class="clock"><span class="online-dot" id="onlineDot"></span><span id="onlineText">ONLINE</span> · <span id="time">04:55 pm</span></div>
+  </header>
+
+  <main>
+    <section id="home" class="screen active">
+      <div class="hero-row">
+        <div class="hero-title">
+          <div class="eyebrow">GAME PASS</div>
+          <h1>Starfield</h1>
+          <p>Cloud-ready • Installed • Continue playing</p>
+          <button class="primary" onclick="toast('Launching Starfield…')">Launch</button>
+        </div>
+        <div class="hero-card starfield">
+          <div class="hero-glow"></div><span>STARFIELD</span>
+        </div>
+      </div>
+
+      <div class="rail-title">Jump back in</div>
+      <div class="rail" id="gamesRail"></div>
+
+      <div class="lower-grid">
+        <div class="big-card" onclick="showSection('apps')">
+          <span class="mini-icon">▣</span>
+          <h3>Browse your games</h3>
+          <p>Games, Android apps and media</p>
+        </div>
+        <div class="big-card" onclick="showSection('settings')">
+          <span class="mini-icon">⌁</span>
+          <h3>Customize your Home</h3>
+          <p>Wallpaper • focus animation • sound</p>
+        </div>
+        <div class="big-card forza" onclick="toast('Forza Horizon 5 launching…')">
+          <div><small>GAME PASS</small><h3>Forza Horizon 5</h3></div>
+        </div>
+        <div class="big-card pro"><div class="controller-shape">●●●</div><h3>Play like a Pro</h3></div>
+      </div>
+    </section>
+
+    <section id="apps" class="screen">
+      <div class="section-head"><div><div class="eyebrow">LIBRARY</div><h2>Apps & Games</h2></div><div style="display:flex;gap:8px"><button class="secondary" onclick="openOnlineDownload()">Download from internet</button><button class="primary" onclick="openInstall()">Install APK</button></div></div>
+      <div class="filters">
+        <button class="chip active" onclick="filterApps('all',this)">All</button>
+        <button class="chip" onclick="filterApps('android',this)">Android</button>
+        <button class="chip" onclick="filterApps('game',this)">Games</button>
+        <button class="chip" onclick="filterApps('movie',this)">Movies</button>
+        <button class="chip" onclick="filterApps('music',this)">Music</button>
+      </div>
+      <div class="app-grid" id="appGrid"></div>
+    </section>
+
+    <section id="downloads" class="screen">
+      <div class="section-head"><div><div class="eyebrow">QUEUE</div><h2>Downloads</h2></div><button class="secondary" onclick="addDemoDownload()">Add demo download</button></div>
+      <div id="downloadsList" class="downloads"></div>
+      <div class="cloud-card"><div class="cloud-icon">☁</div><div><h3>Cloud Storage</h3><p id="cloudText">0 files synced in your demo cloud</p></div><button class="secondary" onclick="syncCloud()">Sync now</button></div>
+    </section>
+
+    <section id="search" class="screen">
+      <div class="section-head"><div><div class="eyebrow">DISCOVER</div><h2>Search</h2></div></div>
+      <div class="searchbox"><span>⌕</span><input id="searchInput" placeholder="Search apps, games, movies, music…" oninput="renderSearch()"></div>
+      <div id="searchResults" class="app-grid"></div>
+    </section>
+
+    <section id="settings" class="screen">
+      <div class="section-head"><div><div class="eyebrow">SYSTEM</div><h2>Settings</h2></div></div>
+      <div class="settings-grid">
+        <div class="settings-card">
+          <h3>Microsoft account</h3>
+          <p>Demo account profile for the simulator.</p>
+          <div class="account-line"><div class="avatar">T</div><div><b>Tahir</b><span>Microsoft Account • Local Demo</span></div></div>
+          <button class="primary" onclick="toast('Sign-in flow is a demo placeholder.')">Manage account</button>
+        </div>
+        <div class="settings-card">
+          <h3>Wallpaper</h3>
+          <p>Choose an animated dashboard background.</p>
+          <div class="wallpapers">
+            <button class="wall active" data-wall="0"></button>
+            <button class="wall wall2" data-wall="1"></button>
+            <button class="wall wall3" data-wall="2"></button>
+          </div>
+        </div>
+        <div class="settings-card">
+          <h3>Dashboard animation</h3>
+          <label class="toggle"><input id="animToggle" type="checkbox" checked><span></span> Focus zoom + glide</label>
+          <label class="toggle"><input id="soundToggle" type="checkbox" checked><span></span> Interface sounds</label>
+        </div>
+        <div class="settings-card">
+          <h3>Storage</h3>
+          <div class="meter"><div id="storageMeter"></div></div>
+          <p id="storageText">0.4 GB used of 128 GB</p>
+          <button class="secondary" onclick="openFileManager()">Open virtual storage</button>
+        </div>
+        <div class="settings-card runtime-card">
+          <h3>Android Runtime</h3>
+          <p id="runtimeStatusText">Checking Android VM / container…</p>
+          <div class="runtime-controls">
+            <select id="avdSelect"><option value="">Select AVD</option></select>
+            <button class="secondary" onclick="refreshRuntime()">Detect</button>
+            <button class="primary" onclick="startSelectedAvd()">Start VM</button>
+            <button class="secondary" onclick="startRedroid()">Start Android Container</button><button class="secondary" onclick="connectRedroid()">Connect</button>
+          </div>
+          <div class="runtime-note">Real Android apps run in the connected Android runtime; this dashboard remains the Xbox-style shell.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="hintbar">
+    <span>↑ ↓ ← → Navigate</span><span>Enter Select</span><span>Esc Back</span><span class="build">Xbox S Android Simulator • v0.1</span>
+  </footer>
+</div>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal()">×</button>
+    <h2 id="modalTitle">Install Android APK</h2>
+    <p id="modalText">Select an APK file to add it to the virtual Android library.</p>
+    <input id="apkFile" type="file" accept=".apk">
+    <div class="modal-actions"><button class="secondary" onclick="closeModal()">Cancel</button><button class="primary" onclick="installApk()">Install</button></div>
+  </div>
+</div>
+
+
+<div id="onlineModal" class="modal hidden">
+  <div class="modal-box">
+    <button class="close" onclick="closeOnlineDownload()">×</button>
+    <h2>Internet Download</h2>
+    <p>Paste a direct HTTP/HTTPS download link. The file will be saved into the simulator's Downloads folder.</p>
+    <input id="downloadUrl" placeholder="https://example.com/file.apk">
+    <input id="downloadName" placeholder="File name (optional)">
+    <div class="modal-actions"><button class="secondary" onclick="closeOnlineDownload()">Cancel</button><button class="primary" onclick="downloadFromInternet()">Download</button></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="app.js"></script><script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}</script>
+</body>
+</html>
